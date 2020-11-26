@@ -9,9 +9,9 @@ using namespace std;
 
 bool gameOver;
 int height = 20, weight = 20; 
-int xPos, yPos, xGold, yGold, score, fact;
+int xPos, yPos, xGold, yGold, score;
 int  xtail[100], ytail[100];
-int tailLength;
+int tailLength=1;
 
 
 void setup() {
@@ -21,13 +21,12 @@ void setup() {
 	yPos = weight / 2;
 	xGold = 3;
 	yGold = 7;
-	score = fact * 5 ;
-	xtail[0]= xPos;
-	ytail[0] = yPos;
+	
+	
 }
 void draw() {
-	int k , h;
-	int testx, testy;
+	int k;
+	
 	system("cls");
 	for (int i = 1; i <= height; i++) {
 
@@ -42,6 +41,7 @@ void draw() {
 					cout << "#";
 				}
 				else { 
+					
 					if (i == xPos && j == yPos)
 						cout << "S";
 					
@@ -49,14 +49,18 @@ void draw() {
 					else if (i == xGold && j == yGold)
 						cout << "G";
 					else { 
+						bool isPrinted = false;
 						for (int k = 0; k < tailLength;k++) {
-							if (i == xtail[k] && j == ytail[k]) { cout << "O";
-							                          
+							if (i == xtail[k] && j == ytail[k]) { 
+								cout << "O";
+								isPrinted = true;
 							}
 						}
-					
-						
-						cout << " "; }
+						if (!isPrinted)
+						{
+							cout << " ";
+						}
+					}
 				}
 			};
 			//cout << "#                                                        #" << endl; }
@@ -95,17 +99,27 @@ void logic() {
 	int xprev = xtail[0];
 	int yprev = ytail[0];
 	int xprev2, yprev2;
-	for (int i= 0; i < tailLength; i++) {
+	xtail[0] = xPos;
+	ytail[0] = yPos;
+	for (int i= 1; i < tailLength; i++) {
 		xprev2 = xtail[i] ;
-		xtail[i] = xprev;
-		xprev = xprev2;
-	}
-	for (int i = 0 + 1; i < tailLength; i++) {
 		yprev2 = ytail[i];
+		xtail[i] = xprev;
 		ytail[i] = yprev;
+		xprev = xprev2;
 		yprev = yprev2;
 	}
+	
+	
+	 
+	/*for (int i = 1; i < tailLength; i++) {
 
+		if (xtail[i] == xPos && ytail[i] == yPos) 
+		{
+			gameOver = true;
+		}
+
+	}*/
 
 	if (xPos < 1 || xPos > height-1 || yPos < 1 || yPos> weight-1) {
 		gameOver = true;
@@ -116,6 +130,7 @@ void logic() {
 		xGold = (rand() % (height-3)) +2;
 		yGold = (rand() % (height - 3)) + 2;
 		tailLength++;
+		score++;
 		
 	}
 	cout << tailLength;
